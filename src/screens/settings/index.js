@@ -1,100 +1,158 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Avatar, Card, Title } from 'react-native-paper';
+import React, { useState } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { Avatar, Card, Title, Paragraph, Button, Portal, Dialog, WebView } from 'react-native-paper';
 
 const SettingsScreen = () => {
-    // Données des cartes
-    const cardData = [
-        { title: 'Share', subtitle: 'Share your app', icon: 'share-variant' },
-        { title: 'Info', subtitle: 'App information', icon: 'information' },
-        { title: 'Contact Us', subtitle: 'Get in touch with us', icon: 'email' },
-    ];
+  const [aboutUsVisible, setAboutUsVisible] = useState(false);
 
-    const settingsData = [
-        { title: 'Notifications', icon: 'bell' },
-        { title: 'Language', icon: 'earth' },
-    ];
+  const cardData = [
+    { title: 'Share', subtitle: 'Share your app', icon: 'share-variant', onPress: handleSharePress },
+    { title: 'Info', subtitle: 'App information', icon: 'information', onPress: handleInfoPress },
+    { title: 'Contact Us', subtitle: 'Get in touch with us', icon: 'email', onPress: handleContactUsPress },
+  ];
 
-    const accountData = [
-        { title: 'Account', icon: 'account' },
-    ];
+  const settingsData = [
+    { title: 'Notifications', icon: 'bell', onPress: handleSettingsPress },
+    { title: 'Language', icon: 'earth', onPress: handleSettingsPress },
+  ];
 
-    // Fonction à exécuter lorsqu'une carte est cliquée
-    const handleCardClick = (index, section) => {
-        console.log(`Card ${index + 1} in ${section} clicked`);
-        // Ajoutez ici le code à exécuter lorsqu'une carte est cliquée
-    };
+  const accountData = [
+    { title: 'Account', icon: 'account', onPress: handleAccountPress },
+  ];
 
-    return (
-        <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.contentContainer}>
+  const handleCardClick = (index, section) => {
+    const card = getCardData(section)[index];
+    if (card.onPress) {
+      card.onPress();
+    }
+  };
 
-                <View style={styles.section}>
-                    <Title style={styles.sectionTitle}>Account</Title>
-                    {accountData.map((data, index) => (
-                        <TouchableOpacity key={index} onPress={() => handleCardClick(index, 'Account')}>
-                            <Card style={styles.card}>
-                                <Card.Title
-                                    title={data.title}
-                                    left={(props) => <Avatar.Icon {...props} icon={data.icon} />}
-                                />
-                            </Card>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+  const handleSharePress = () => {
+    // Ajoutez ici le code pour implémenter le partage de l'application
+    console.log('Share pressed');
+  };
 
-                <View style={styles.section}>
-                    <Title style={styles.sectionTitle}>Settings</Title>
-                    {settingsData.map((data, index) => (
-                        <TouchableOpacity key={index} onPress={() => handleCardClick(index, 'Settings')}>
-                            <Card style={styles.card}>
-                                <Card.Title
-                                    title={data.title}
-                                    left={(props) => <Avatar.Icon {...props} icon={data.icon} />}
-                                />
-                            </Card>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+  const handleInfoPress = () => {
+    // Ajoutez ici le code pour afficher des informations sur l'application
+    console.log('Info pressed');
+  };
 
-                <View style={styles.section}>
-                    <Title style={styles.sectionTitle}>General</Title>
-                    {cardData.map((data, index) => (
-                        <TouchableOpacity key={index} onPress={() => handleCardClick(index, 'General')}>
-                            <Card style={styles.card}>
-                                <Card.Title
-                                    title={data.title}
-                                    subtitle={data.subtitle}
-                                    left={(props) => <Avatar.Icon {...props} icon={data.icon} />}
-                                />
-                            </Card>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            </ScrollView>
+  const handleContactUsPress = () => {
+    // Ajoutez ici le code pour afficher les coordonnées ou un formulaire de contact
+    console.log('Contact Us pressed');
+  };
+
+  const handleSettingsPress = () => {
+    // Ajoutez ici le code pour gérer les paramètres de l'application
+    console.log('Settings pressed');
+  };
+
+  const handleAccountPress = () => {
+    // Ajoutez ici le code pour gérer le compte utilisateur
+    console.log('Account pressed');
+  };
+
+  const getCardData = (section) => {
+    switch (section) {
+      case 'Settings':
+        return settingsData;
+      case 'Account':
+        return accountData;
+      default:
+        return cardData;
+    }
+  };
+
+  const openAboutUsDialog = () => {
+    setAboutUsVisible(true);
+  };
+
+  const closeAboutUsDialog = () => {
+    setAboutUsVisible(false);
+  };
+
+  return (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.section}>
+          <Title style={styles.sectionTitle}>Account</Title>
+          {accountData.map((data, index) => (
+            <TouchableOpacity key={index} onPress={() => handleCardClick(index, 'Account')}>
+              <Card style={styles.card}>
+                <Card.Title
+                  title={data.title}
+                  left={(props) => <Avatar.Icon {...props} icon={data.icon} />}
+                />
+              </Card>
+            </TouchableOpacity>
+          ))}
         </View>
-    );
+
+        <View style={styles.section}>
+          <Title style={styles.sectionTitle}>Settings</Title>
+          {settingsData.map((data, index) => (
+            <TouchableOpacity key={index} onPress={() => handleCardClick(index, 'Settings')}>
+              <Card style={styles.card}>
+                <Card.Title
+                  title={data.title}
+                  left={(props) => <Avatar.Icon {...props} icon={data.icon} />}
+                />
+              </Card>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.section}>
+          <Title style={styles.sectionTitle}>General</Title>
+          {cardData.map((data, index) => (
+            <TouchableOpacity key={index} onPress={() => handleCardClick(index, 'General')}>
+              <Card style={styles.card}>
+                <Card.Title
+                  title={data.title}
+                  subtitle={data.subtitle}
+                  left={(props) => <Avatar.Icon {...props} icon={data.icon} />}
+                />
+              </Card>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+
+      {/* Share Dialog */}
+      <Portal>
+        <Dialog visible={aboutUsVisible} onDismiss={closeAboutUsDialog}>
+          <Dialog.Title>About Us</Dialog.Title>
+          <Dialog.Content>
+            <WebView source={{ uri: 'https://sportpassioninfo.com/qui-sommes-nous/' }} />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={closeAboutUsDialog}>Close</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    contentContainer: {
-        padding: 16,
-    },
-    section: {
-        marginBottom: 16,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 8,
-    },
-    card: {
-        width: '100%', // Occupera toute la largeur disponible
-        marginBottom: 16, // Espacement entre les cartes
-    },
+  container: {
+    flex: 1,
+  },
+  contentContainer: {
+    padding: 16,
+  },
+  section: {
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  card: {
+    width: '100%',
+    marginBottom: 16,
+  },
 });
 
 export default SettingsScreen;

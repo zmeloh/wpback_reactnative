@@ -1,9 +1,13 @@
-// DrawerApp.js
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { Drawer } from 'react-native-paper';
 
-const DrawerApp = ({ isOpen, closeDrawer }) => {
+const DrawerApp = forwardRef(({ isOpen, closeDrawer }, ref) => {
   const [active, setActive] = React.useState('');
+
+  useImperativeHandle(ref, () => ({
+    openDrawer: () => setActive(true),
+    closeDrawer: () => setActive(false),
+  }));
 
   return (
     <Drawer visible={isOpen} onDismiss={closeDrawer} elevation={16}>
@@ -21,6 +25,6 @@ const DrawerApp = ({ isOpen, closeDrawer }) => {
       </Drawer.Section>
     </Drawer>
   );
-};
+});
 
 export default DrawerApp;

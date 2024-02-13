@@ -1,40 +1,49 @@
-// HomeScreen.js
-
-import React, { useState, useEffect } from 'react';
-import { View, FlatList, RefreshControl, ActivityIndicator, StyleSheet, TouchableOpacity } from 'react-native';
-import { Card, Title, Paragraph } from 'react-native-paper';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, FlatList, RefreshControl, ActivityIndicator, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { Card, Title, Paragraph, Text, FAB, Button } from 'react-native-paper';
 import axios from 'axios';
-import AppBar from '../../components/appbar';
 
-const API_URL = 'https://sportpassioninfo.com/wp-json/wp/v2/posts?per_page=12';
+const API_URL = 'https://sportpassioninfo.com/wp-json/wp/v2/posts';
 
 const HomeScreen = ({ navigation }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const loadArticles = useCallback(async () => {
+    try {
+      const response = await axios.get(API_URL, {
+        params: {
+          per_page: 12,
+          page: currentPage,
+        },
+      });
+
+      if (currentPage === 1) {
+        setArticles(response.data);
+      } else {
+        setArticles((prevArticles) => [...prevArticles, ...response.data]);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des articles :', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, [refreshing, currentPage]);
 
   useEffect(() => {
-    const loadArticles = async () => {
-      try {
-        const response = await axios.get(API_URL);
-        setArticles(response.data);
-      } catch (error) {
-        console.error('Erreur lors du chargement des articles :', error);
-      } finally {
-        setLoading(false);
-        setRefreshing(false);
-      }
-    };
-
     loadArticles();
-  }, [refreshing]);
+  }, [loadArticles]);
 
   const onRefresh = () => {
     setRefreshing(true);
+    setCurrentPage(1);
   };
 
   const navigateToPost = (postId) => {
-    navigation.navigate('Post', { articleId: postId }); // Utilisez "articleId" au lieu de "postId"
+    navigation.navigate('Post', { articleId: postId });
   };
 
   const renderArticle = ({ item }) => {
@@ -54,6 +63,16 @@ const HomeScreen = ({ navigation }) => {
     );
   };
 
+  const handleLoadMore = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handleScrollToTop = () => {
+    flatListRef.current?.scrollToOffset({ animated: true, offset: 0 });
+  };
+
+  const flatListRef = React.createRef();
+
   return (
     <View style={{ flex: 1 }}>
       {loading ? (
@@ -61,13 +80,25 @@ const HomeScreen = ({ navigation }) => {
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       ) : (
-        <FlatList
-          data={articles}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderArticle}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          style={styles.flatList}
-        />
+        <>
+          <FlatList
+            ref={flatListRef}
+            data={articles}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderArticle}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            style={styles.flatList}
+            // Pagination
+            onEndReached={handleLoadMore}
+            onEndReachedThreshold={0.1}
+          />
+
+          <FAB
+            style={styles.fab}
+            icon="arrow-up"
+            onPress={handleScrollToTop}
+          />
+        </>
       )}
     </View>
   );
@@ -90,6 +121,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: undefined,
     aspectRatio: 16 / 9,
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 
