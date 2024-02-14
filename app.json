@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo-spi.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -28,7 +28,7 @@
       "package": "com.zmeloh.spiapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo-spi.png"
     },
     "extra": {
       "eas": {
