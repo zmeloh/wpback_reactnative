@@ -6,7 +6,7 @@ import HTML from 'react-native-render-html';
 import { useNavigation } from '@react-navigation/native';
 
 const API_BASE_URL = 'https://sportpassioninfo.com/wp-json/wp/v2/posts/';
-const API_RELATED_URL = 'https://sportpassioninfo.com/wp-json/wp/v2/posts?per_page=5&categories=';
+const API_RELATED_URL = 'https://sportpassioninfo.com/wp-json/wp/v2/posts?per_page=7&categories=';
 
 const PostScreen = ({ route }) => {
   const { articleId } = route.params;

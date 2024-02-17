@@ -12,7 +12,6 @@ const AppBar = () => {
         title={
           <React.Fragment>
             <Image source={require('../../../assets/logo-spi.png')} style={styles.logo} />
-            <Text style={styles.title}>Sport Passion Info</Text>
           </React.Fragment>
         }
       />
@@ -22,8 +21,7 @@ const AppBar = () => {
 
 const styles = StyleSheet.create({
   appbar: {
-    padding: 20,
-    height: 80,
+    padding: 10,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -31,8 +29,8 @@ const styles = StyleSheet.create({
     flex: 1, // Assure que le titre et le logo occupent tout l'espace horizontal
   },
   logo: {
-    width: 36,
-    height: 36,
+    width: 48,
+    height: 48,
   },
   title: {
     color: '#00008B',

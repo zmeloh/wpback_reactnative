@@ -1,19 +1,9 @@
-import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { List } from 'react-native-paper';
 import { WebView } from 'react-native-webview';
 
 const CommunityScreen = () => {
-  const [loading, setLoading] = useState([true, true, true]);
-
-  const handleLoadEnd = (index) => {
-    setLoading((prevLoading) => {
-      const updatedLoading = [...prevLoading];
-      updatedLoading[index] = false;
-      return updatedLoading;
-    });
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -33,21 +23,27 @@ const CommunityScreen = () => {
             uri: 'https://twitter.com/sportspassioni1',
             icon: 'twitter',
           },
+          {
+            title: 'TikTok Community',
+            uri: 'https://www.tiktok.com/@sportpassioninfo',
+            icon: 'video', // Assurez-vous que votre bibliothèque d'icônes prend en charge TikTok ou utilisez une icône générique
+          },
         ].map((community, index) => (
           <List.Accordion
             key={index}
             title={community.title}
             left={(props) => <List.Icon {...props} icon={community.icon} />}
           >
-            <View style={{ flex: 1, height: 800 }}>
-              {loading[index] && <ActivityIndicator style={styles.loader} size="large" />}
-              {!loading[index] && (
-                <WebView
-                  source={{ uri: community.uri }}
-                  style={{ flex: 1 }}
-                  onLoadEnd={() => handleLoadEnd(index)}
-                />
-              )}
+            <View style={{ flex: 1, height: 500 }}>
+              <WebView
+                source={{ uri: community.uri }}
+                style={{ flex: 1, height: 500 }}
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
+                startInLoadingState={false}
+                scalesPageToFit={false}
+                bounces={false} // Cette ligne corrige le problème de défilement sur Android
+              />
             </View>
           </List.Accordion>
         ))}
@@ -59,12 +55,6 @@ const CommunityScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  loader: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.8)',
   },
 });
 
