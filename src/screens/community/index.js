@@ -6,7 +6,7 @@ import { WebView } from 'react-native-webview';
 const CommunityScreen = () => {
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView scrollEnabled>
         {[
           {
             title: 'Facebook Community',
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
 });
 
 export default CommunityScreen;

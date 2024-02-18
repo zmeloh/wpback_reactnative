@@ -22,6 +22,7 @@ const AppBar = () => {
 const styles = StyleSheet.create({
   appbar: {
     padding: 10,
+    elevation: 4,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -31,6 +32,10 @@ const styles = StyleSheet.create({
   logo: {
     width: 48,
     height: 48,
+    position: 'absolute', 
+    left: '50%', 
+    bottom:-24,
+    marginLeft: -24, 
   },
   title: {
     color: '#00008B',

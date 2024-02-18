@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
-import { Avatar, Card, Title, Paragraph, Button, Portal, Dialog, WebView } from 'react-native-paper';
+import { Avatar, Card, Title, Button, Portal, Dialog, FAB } from 'react-native-paper';
+import { Share } from 'react-native';
+import { WebView } from 'react-native-webview';
+
 
 const SettingsScreen = () => {
   const [aboutUsVisible, setAboutUsVisible] = useState(false);
 
   const cardData = [
-    { title: 'Share', subtitle: 'Share your app', icon: 'share-variant', onPress: handleSharePress },
-    { title: 'Info', subtitle: 'App information', icon: 'information', onPress: handleInfoPress },
+    // { title: 'Info', subtitle: 'App information', icon: 'information', onPress: handleInfoPress },
     { title: 'Contact Us', subtitle: 'Get in touch with us', icon: 'email', onPress: handleContactUsPress },
   ];
 
@@ -27,19 +29,22 @@ const SettingsScreen = () => {
     }
   };
 
-  const handleSharePress = () => {
-    // Ajoutez ici le code pour implémenter le partage de l'application
-    console.log('Share pressed');
-  };
-
-  const handleInfoPress = () => {
-    // Ajoutez ici le code pour afficher des informations sur l'application
-    console.log('Info pressed');
+  const handleSharePress = async () => {
+    try {
+      await Share.share({
+        message: 'Check out this awesome app!',
+        url: 'https://sportpassioninfo.com',  // Replace with your app link
+      });
+    } catch (error) {
+      console.error('Error sharing:', error.message);
+    }
   };
 
   const handleContactUsPress = () => {
-    // Ajoutez ici le code pour afficher les coordonnées ou un formulaire de contact
-    console.log('Contact Us pressed');
+    console.log('Opening Contact Us link');
+    // Ouvrir le lien externe dans un navigateur
+    const contactUsUrl = 'https://sportpassioninfo.com/contact/';
+    Linking.openURL(contactUsUrl).catch((err) => console.error('Error opening link:', err));
   };
 
   const handleSettingsPress = () => {
@@ -130,6 +135,13 @@ const SettingsScreen = () => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
+
+      {/* Share FAB */}
+      <FAB
+        style={styles.fab}
+        icon="share-variant"
+        onPress={handleSharePress}
+      />
     </View>
   );
 };
@@ -152,6 +164,12 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     marginBottom: 16,
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 
