@@ -42,7 +42,7 @@ const CommunityScreen = () => {
                 domStorageEnabled={true}
                 startInLoadingState={false}
                 scalesPageToFit={false}
-                bounces={false} // Cette ligne corrige le problème de défilement sur Android
+                nestedScrollEnabled={true}
               />
             </View>
           </List.Accordion>
